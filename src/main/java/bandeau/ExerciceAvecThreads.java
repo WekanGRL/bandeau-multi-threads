@@ -16,6 +16,7 @@ public class ExerciceAvecThreads {
         var b3 = new Bandeau();
         System.out.println("CTRL-C pour terminer le programme");
         // On doit jouer le scénario en même temps sur les trois bandeaux
+        // On crée un thread pour chaque bandeau
         s.playOn(b1);
         s.playOn(b2);
         s.playOn(b3);

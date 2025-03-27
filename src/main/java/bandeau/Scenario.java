@@ -41,18 +41,16 @@ public class Scenario {
      */
     public void playOn(LockableBandeau b) {
         Thread t = new Thread(() -> {
-            for (ScenarioElement element : myElements) {
-                try {
-                    if(b.tryLock(1000)){
-                        for (int repeats = 0; repeats < element.repeats; repeats++) {
-                            element.effect.playOn(b);
-                        }
-                        b.unlock();
+            try {
+                b.lock();
+                for (ScenarioElement element : myElements) {
+                    for (int repeats = 0; repeats < element.repeats; repeats++) {
+                        element.effect.playOn(b);
                     }
-                } catch (InterruptedException ex){
-                    break;
                 }
-
+                b.unlock();
+            } catch (InterruptedException ex) {
+                return;
             }
         });
         t.start();

@@ -11,9 +11,9 @@ public class ExerciceAvecThreads {
 
         Scenario s = makeScenario();
         // On cree les bandeaux
-        var b1 = new Bandeau();
-        var b2 = new Bandeau();
-        var b3 = new Bandeau();
+        var b1 = new LockableBandeau();
+        var b2 = new LockableBandeau();
+        var b3 = new LockableBandeau();
         System.out.println("CTRL-C pour terminer le programme");
         // On doit jouer le scénario en même temps sur les trois bandeaux
         // On crée un thread pour chaque bandeau

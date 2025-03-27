@@ -1,6 +1,8 @@
 package bandeau;
 import java.util.List;
 import java.util.LinkedList;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Classe utilitaire pour représenter la classe-association UML
@@ -20,7 +22,6 @@ class ScenarioElement {
  * Un scenario sait se jouer sur un bandeau.
  */
 public class Scenario {
-
     private final List<ScenarioElement> myElements = new LinkedList<>();
 
     /**
@@ -38,11 +39,24 @@ public class Scenario {
      *
      * @param b le bandeau ou s'afficher.
      */
-    public void playOn(Bandeau b) {
-        for (ScenarioElement element : myElements) {
-            for (int repeats = 0; repeats < element.repeats; repeats++) {
-                element.effect.playOn(b);
+    public void playOn(LockableBandeau b) {
+        Thread t = new Thread(() -> {
+            for (ScenarioElement element : myElements) {
+                try {
+                    if(b.tryLock(1000)){
+                        for (int repeats = 0; repeats < element.repeats; repeats++) {
+                            element.effect.playOn(b);
+                        }
+                        b.unlock();
+                    }
+                } catch (InterruptedException ex){
+                    break;
+                }
+
             }
-        }
+        });
+        t.start();
     }
 }
+
+
